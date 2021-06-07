@@ -27,9 +27,3 @@ std::string SimpleCache::get(std::string key)
 	return "NIL";
 }
 
-std::map<std::string, std::string> SimpleCache::get_map()
-{
-	std::map<std::string, std::string> cache;
-	return cache;
-}
-
