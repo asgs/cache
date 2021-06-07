@@ -35,6 +35,6 @@ class SimpleCache
 		std::string get(std::string key);
 
 		std::map<std::string, EntryWithTtl> get_map();
-};	
+};
 
 #endif // CACHE_H
