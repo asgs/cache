@@ -5,52 +5,31 @@
 #include "cache.h"
 #include "datetime_utils.h"
 
-std::string EntryWithTtl::get() 
+void SimpleCache::put(std::string key, std::string value, long ttl)
 {
-	long current = current_time();
-	if (ttl > current) 
-	{
-		//std::cout << "current_time is " << current << ";ttl is " << ttl << " and entry is " << entry << std::endl;
-		return static_cast<std::string>(entry);
-	}
-	else
-	{
-		return "NIL";
-	}
+	SimpleCache::EntryWithTtl entry(value, ttl);
+	cache[key] = entry;
 }
 
-long EntryWithTtl::get_ttl() {
-	return ttl;
-}
-
-void SimpleCache::put(std::string key, EntryWithTtl value)
+void SimpleCache::put(std::string key, std::string value)
 {
-	cache[key] = value;
+	SimpleCache::put(key, value, -1);
 }
 
 std::string SimpleCache::get(std::string key)
 {
-	EntryWithTtl entry = cache[key];
+	SimpleCache::EntryWithTtl entry = cache[key];
 	if (entry.get_ttl() > current_time())
 	{
 		return cache[key].get();
 	}
+	cache.erase(key);
 	return "NIL";
 }
 
-std::map<std::string, EntryWithTtl> SimpleCache::get_map()
+std::map<std::string, std::string> SimpleCache::get_map()
 {
-	return this -> cache;
+	std::map<std::string, std::string> cache;
+	return cache;
 }
-
-std::ostream& operator<<(std::ostream& os, EntryWithTtl& e)
-{
-	//std::cout << "e.get() is " << e.get() << std::endl;
-	return os << e.get();
-}
-
-/*std::ostream& operator<<(std::ostream& os, SimpleCache& c)
-{
-	return os << c.get_map();
-}*/
 
