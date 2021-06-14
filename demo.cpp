@@ -16,10 +16,11 @@ int main() {
 	std::string key2 = "b";
 	cache.put(key2, value2, current_time() + 11);
 
+	cache.print();
 	std::this_thread::sleep_for(std::chrono::seconds(5));
 
-	//std::cout << "Cache is " << cache;
-	std::cout << "value of key " << key1 << " is " << cache.get(key1);
-	std::cout << std::endl << "value of key " << key2 << " is " << cache.get(key2);
+	cache.print();
+	//std::cout << "value of key " << key1 << " is " << cache.get(key1);
+	//std::cout << std::endl << "value of key " << key2 << " is " << cache.get(key2);
 }
 

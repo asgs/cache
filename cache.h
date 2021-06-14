@@ -43,6 +43,8 @@ class SimpleCache
 
 		std::string get(std::string key);
 
+		void print();
+
 		//friend std::ostream& operator<<(std::ostream& os, SimpleCache::EntryWithTtl& e);
 };
 

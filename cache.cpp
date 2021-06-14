@@ -19,11 +19,27 @@ void SimpleCache::put(std::string key, std::string value)
 std::string SimpleCache::get(std::string key)
 {
 	SimpleCache::EntryWithTtl entry = cache[key];
-	if (entry.get_ttl() > current_time())
+	if (entry.get_ttl() >= current_time())
 	{
 		return cache[key].get();
 	}
+	std::cerr << "Key " << key << " exceeded TTL. Removing it" << std::endl;
 	cache.erase(key);
-	return "NIL";
+	return "";
+}
+
+void SimpleCache::print()
+{
+	for (auto it = cache.begin(); it != cache.end(); it++)
+	{
+		std::string key = it->first;
+		std::string value = get(key);
+		if (value != "")
+		{
+			std::cout << key << ":" << value << ",";
+		}
+	}
+
+	std::cout << std::endl;
 }
 
