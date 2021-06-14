@@ -1,27 +1,31 @@
 #include <string>
 #include <map>
+#include <iostream>
 #ifndef CACHE_H
 #define CACHE_H
+#include "datetime_utils.h"
 
+template<class K, class V>
 class SimpleCache
 {
-
 	class EntryWithTtl {
 		private:
-			std::string entry;
+			K entry;
 			long ttl;
 
 		public:
-			EntryWithTtl() {
+			EntryWithTtl()
+			{
 				EntryWithTtl("NIL", -1);
 			}
 
-			EntryWithTtl(std::string entry, long ttl) {
+			EntryWithTtl(K entry, long ttl)
+			{
 				this -> entry = entry;
 				this -> ttl = ttl;
 			}
 
-			std::string get()
+			K get()
 			{
 				return entry;
 			}
@@ -34,16 +38,46 @@ class SimpleCache
 	};
 
 	private:
-		std::map<std::string, EntryWithTtl> cache;
+		std::map<K, EntryWithTtl> cache;
 
 	public:
-		void put(std::string key, std::string value);
+		void put(K key, V value, long ttl)
+		{
+			typename SimpleCache::EntryWithTtl entry(value, ttl);
+			cache[key] = entry;
+		}
 
-		void put(std::string key, std::string value, long ttl);
+		void put(K key, V value)
+		{
+			SimpleCache::put(key, value, -1);
+		}
 
-		std::string get(std::string key);
+		V get(K key)
+		{
+			typename SimpleCache::EntryWithTtl entry = cache[key];
+			if (entry.get_ttl() >= current_time())
+			{
+				return cache[key].get();
+			}
+			std::cerr << "Key " << key << " exceeded TTL. Removing it" << std::endl;
+			cache.erase(key);
+			return "";
+		}
 
-		void print();
+		void print()
+		{
+			for (auto it = cache.begin(); it != cache.end(); it++)
+			{
+				K key = it->first;
+				V value = get(key);
+				if (value != "")
+				{
+					std::cout << key << ":" << value << ",";
+				}
+			}
+
+			std::cout << std::endl;
+		}
 
 		//friend std::ostream& operator<<(std::ostream& os, SimpleCache::EntryWithTtl& e);
 };

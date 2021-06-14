@@ -6,7 +6,7 @@
 #include "datetime_utils.h"
 
 int main() {
-	SimpleCache cache;
+	SimpleCache<std::string, std::string> cache;
 
 	std::string value1 = "1";
 	std::string key1 = "a";
